@@ -58,23 +58,38 @@ class RequiredTranslations
     {
         $allFiles = $this->disk->allFiles($this->paths);
 
-        $excludedPathsAbsolute = array_map(function ($path) {
-            return realpath($path) ?: $path;
-        }, $this->excludedPaths);
-
         return Collection::make($allFiles)
-            ->filter(function ($file) use ($excludedPathsAbsolute) {
-                $filePath = realpath($file->getPathName());
+            ->reject(function ($file) {
+                $filePath = $this->normalizePath($file->getPathName());
 
-                foreach ($excludedPathsAbsolute as $excludedPath) {
-                    if ($this->startsWith($filePath, $excludedPath)) {
-                        return false;
+                foreach ($this->excludedPaths as $excludedPath) {
+                    $normalizedExcludedPath = $this->normalizePath($excludedPath);
+                    if (strpos($filePath, $normalizedExcludedPath) === 0) {
+                        return true;
                     }
                 }
 
-                return true;
+                return false;
             })
             ->toArray();
+    }
+
+    /*
+     *  Converts Directory Separators
+     *  Different operating systems use different directory separators in file paths. Windows uses backslashes (\),
+     *  while UNIX-like systems, including Linux and macOS, use forward slashes (/). The str_replace('\\', '/', $path)
+     *  part of the function converts all backslashes to forward slashes. This ensures that paths are handled in a uniform way,
+     *  regardless of the operating system on which your PHP code is running.
+     *
+     *  Removes Trailing Slashes
+     *  Paths can sometimes end with a trailing slash (or backslash, depending on the system), especially when referring to directories.
+     *  However, when comparing two paths, a trailing slash might lead to inconsistencies where two paths that essentially refer to the same directory are considered different.
+     *  For example, some/path/ and some/path would be considered different strings even though they refer to the same directory.
+     *  The rtrim($path, '/') part removes any trailing forward slashes from the path, ensuring that paths are compared without considering these potentially extraneous characters.
+     */
+    private function normalizePath($path): string
+    {
+        return rtrim(str_replace('\\', '/', $path), '/');
     }
 
     private function startsWith($haystack, $needle): bool
