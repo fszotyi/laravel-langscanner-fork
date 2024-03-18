@@ -45,6 +45,12 @@ class LangscannerCommand extends Command
 
     protected function processLanguage($language, $outputPath, $filesystem): void
     {
+        if (!$filesystem->exists($outputPath)) {
+            // Create the directory if it doesn't exist
+            $filesystem->makeDirectory($outputPath, 0755, true);
+            $this->info("Created directory: {$outputPath}");
+        }
+
         $fileTranslations = new CachedFileTranslations(
             new FileTranslations([
                 'language' => $language,
