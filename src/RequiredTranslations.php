@@ -5,6 +5,7 @@ namespace Druc\Langscanner;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Webmozart\Assert\Assert;
 
 class RequiredTranslations
@@ -56,30 +57,11 @@ class RequiredTranslations
 
     private function files(): array
     {
-        $allFiles = $this->disk->allFiles($this->paths);
+        $files = $this->disk->allFiles($this->paths);
 
-        $excludedPathsAbsolute = array_map(function ($path) {
-            return realpath($path) ?: $path;
-        }, $this->excludedPaths);
-
-        return Collection::make($allFiles)
-            ->filter(function ($file) use ($excludedPathsAbsolute) {
-                $filePath = realpath($file->getPathName());
-
-                foreach ($excludedPathsAbsolute as $excludedPath) {
-                    if ($this->startsWith($filePath, $excludedPath)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            })
+        return Collection::make($files)
+            ->filter(fn ($file) => !Str::startsWith($file->getPathName(), $this->excludedPaths))
             ->toArray();
-    }
-
-    private function startsWith($haystack, $needle): bool
-    {
-        return strncmp($haystack, $needle, strlen($needle)) === 0;
     }
 
     private function existingPhpTranslations(): array
