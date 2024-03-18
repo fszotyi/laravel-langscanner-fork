@@ -32,7 +32,13 @@ class LangscannerCommand extends Command
 
         // Apply exclusions if any are provided
         if (!empty($exclusions)) {
-            $config['excluded_paths'] = array_merge($config['excluded_paths'], $exclusions);
+            $basePath = base_path();
+            $transformedExclusions = array_map(function ($path) use ($basePath) {
+                // Ensure path is correctly formatted with base path
+                return $basePath . '/' . trim($path, '/');
+            }, $exclusions);
+
+            $config['excluded_paths'] = array_merge($config['excluded_paths'], $transformedExclusions);
         }
 
         $languages = $this->getLanguages($language, $outputPath, $filesystem);
