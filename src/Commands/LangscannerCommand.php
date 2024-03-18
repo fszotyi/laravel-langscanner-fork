@@ -12,13 +12,15 @@ use Illuminate\Filesystem\Filesystem;
 
 class LangscannerCommand extends Command
 {
-    protected $signature = 'langscanner {language?} {--path= : The path to scan for translation keys (ex: --path=app/Modules/Module1 )}';
+    protected $signature = 'langscanner {language?} {--path= : The path to scan for translation keys (ex: --path=app/Modules/Module1 )} {--exclude-path=* : Directories to exclude from the scan (ex: --path=app/Modules/) }';
     protected $description = "Updates translation files with missing translation keys.";
 
     public function handle(Filesystem $filesystem): void
     {
         $language = $this->argument('language');
         $modulePath = $this->option('path');
+        $exclusions = $this->option('exclude-path');
+
         $config = config('langscanner');
 
         if ($modulePath) {
@@ -26,6 +28,11 @@ class LangscannerCommand extends Command
             $outputPath = $modulePath . '/resources/lang/';
         } else {
             $outputPath = config('langscanner.lang_dir_path') . '/';
+        }
+
+        // Apply exclusions if any are provided
+        if (!empty($exclusions)) {
+            $config['excluded_paths'] = array_merge($config['excluded_paths'], $exclusions);
         }
 
         $languages = $this->getLanguages($language, $outputPath, $filesystem);
@@ -67,7 +74,6 @@ class LangscannerCommand extends Command
         );
 
         $fileTranslations->update(
-            // Sets translation values to empty string
             array_fill_keys(
                 array_keys($missingTranslations->all()),
                 ''
