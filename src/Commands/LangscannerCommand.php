@@ -19,8 +19,10 @@ class LangscannerCommand extends Command
     {
         $language = $this->argument('language');
         $modulePath = $this->option('path');
+        $config = config('langscanner');
 
         if ($modulePath) {
+            $config['paths'] = [$modulePath];
             $outputPath = $modulePath . '/resources/lang/';
         } else {
             $outputPath = config('langscanner.lang_dir_path') . '/';
@@ -29,7 +31,7 @@ class LangscannerCommand extends Command
         $languages = $this->getLanguages($language, $outputPath, $filesystem);
 
         foreach ($languages as $language) {
-            $this->processLanguage($language, $outputPath, $filesystem);
+            $this->processLanguage($language, $outputPath, $filesystem, $config);
         }
     }
 
@@ -43,7 +45,7 @@ class LangscannerCommand extends Command
         }
     }
 
-    protected function processLanguage($language, $outputPath, $filesystem): void
+    protected function processLanguage($language, $outputPath, Filesystem $filesystem, $config): void
     {
         if (!$filesystem->exists($outputPath)) {
             // Create the directory if it doesn't exist
@@ -60,7 +62,7 @@ class LangscannerCommand extends Command
         );
 
         $missingTranslations = new MissingTranslations(
-            new RequiredTranslations(config('langscanner')),
+            new RequiredTranslations($config),
             $fileTranslations
         );
 
