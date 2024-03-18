@@ -57,10 +57,18 @@ class RequiredTranslations
 
     private function files(): array
     {
-        $files = $this->disk->allFiles($this->paths);
+        $allFiles = $this->disk->allFiles($this->paths);
 
-        return Collection::make($files)
-            ->filter(fn ($file) => !Str::startsWith($file->getPathName(), $this->excludedPaths))
+        return Collection::make($allFiles)
+            ->reject(function ($file) {
+                // Check if file path starts with any of the excluded paths
+                foreach ($this->excludedPaths as $excludedPath) {
+                    if (Str::startsWith($file->getPathName(), $excludedPath)) {
+                        return true;
+                    }
+                }
+                return false;
+            })
             ->toArray();
     }
 
