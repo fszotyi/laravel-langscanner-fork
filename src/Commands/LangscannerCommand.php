@@ -12,7 +12,7 @@ use Illuminate\Filesystem\Filesystem;
 
 class LangscannerCommand extends Command
 {
-    protected $signature = 'langscanner {language?} {--path= : The path to scan for translation keys}';
+    protected $signature = 'langscanner {language?} {--path= : The path to scan for translation keys(ex: --path=app/Modules/Module1 )}';
     protected $description = "Updates translation files with missing translation keys.";
 
     public function handle(Filesystem $filesystem): void
