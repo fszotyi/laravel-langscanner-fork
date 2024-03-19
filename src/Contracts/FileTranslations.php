@@ -4,7 +4,7 @@ namespace Druc\Langscanner\Contracts;
 
 interface FileTranslations
 {
-    public function update(array $translations): void;
+    public function update(array $translations, string $filename): void;
 
     public function all(): array;
 

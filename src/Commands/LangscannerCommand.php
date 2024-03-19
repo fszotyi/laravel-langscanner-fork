@@ -25,7 +25,7 @@ class LangscannerCommand extends Command
 
         if ($modulePath) {
             $config['paths'] = [$modulePath];
-            $outputPath = $modulePath . '/resources/lang/';
+            $outputPath = $modulePath . "/resources/lang/{$language}";
         } else {
             $outputPath = config('langscanner.lang_dir_path') . '/';
         }
@@ -83,7 +83,8 @@ class LangscannerCommand extends Command
             array_fill_keys(
                 array_keys($missingTranslations->all()),
                 ''
-            )
+            ),
+            'text.json'
         );
 
         // Render table with missing translations

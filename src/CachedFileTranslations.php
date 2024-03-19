@@ -13,7 +13,7 @@ class CachedFileTranslations implements FileTranslations
         $this->fileTranslations = $fileTranslations;
     }
 
-    public function update(array $translations): void
+    public function update(array $translations, string $filename): void
     {
         $this->fileTranslations->update($translations);
     }

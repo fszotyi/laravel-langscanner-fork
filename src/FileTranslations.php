@@ -25,12 +25,12 @@ class FileTranslations implements Contracts\FileTranslations
         return $this->language;
     }
 
-    public function update(array $translations): void
+    public function update(array $translations, $filename = 'text.json'): void
     {
         $translations = array_merge($this->all(), $translations);
         $translations = json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $this->disk->put($this->path(), $translations);
+        $this->disk->put($this->rootPath . $filename, $translations);
     }
 
     public function all(): array
