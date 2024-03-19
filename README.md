@@ -1,20 +1,34 @@
-# laravel-langscanner
+# laravel-langscanner-fork
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/druc/laravel-langscanner.svg?style=flat-square)](https://packagist.org/packages/druc/laravel-langscanner)
-[![Tests](https://github.com/druc/laravel-langscanner/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/druc/laravel-langscanner/actions/workflows/run-tests.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/druc/laravel-langscanner.svg?style=flat-square)](https://packagist.org/packages/druc/laravel-langscanner)
-
-This package scans your project for missing translation keys and then writes them into individual json files for you to fill in.
+This repo is a fork of the `druc/laravel-langscanner` package.
 
 ## Installation
 
 You can install the package via composer:
 
+In `composer.json` add:
+```
+ "repositories": [
+     {
+         "type": "vcs",
+         "url": "git@github.com:fszotyi/laravel-langscanner-fork.git"
+     }
+ ]
+```
+
+
 ```bash
-composer require druc/laravel-langscanner
+ composer require druc/laravel-langscanner:dev-master
 ```
 
 ## Usage
+
+To get started with the package capabilities you can:
+
+```
+ php artisan langscanner --help
+```
+
 
 Scan your project for missing translations:
 
@@ -24,7 +38,13 @@ php artisan langscanner nl
 
 // outputs and writes translations in the existing {language}.json files
 php artisan langscanner
-```
+
+// to scan a module and generate the JSON files into the module (if --path= is provided it will generate the JSON inside the provided "path/resources/lang" directory)
+php artisan langscanner en --path=app/Modules/Dashboard
+
+//  to exclude a path from the scan (it will generate the output JSON inside the core app "app_root/lang" directory)
+php artisan langscanner en --exclude-path=app/Modules/
+``` 
 
 ## Credits
 
