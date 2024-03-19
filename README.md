@@ -43,7 +43,7 @@ php artisan langscanner
 php artisan langscanner en --path=app/Modules/Dashboard
 
 //  to exclude a path from the scan (it will generate the output JSON inside the core app "app_root/lang" directory)
-php artisan langscanner en --exclude-path=app/Modules/
+php artisan langscanner en --exclude-path=app/Modules
 ``` 
 
 ## Credits

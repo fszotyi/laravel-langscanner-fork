@@ -17,6 +17,11 @@ class Languages
     public static function fromPath(string $path, Filesystem $filesystem = null): self
     {
         $filesystem ??= resolve(Filesystem::class);
+
+        if (!$filesystem->exists($path)) {
+            return new self([]);
+        }
+
         $languages = Collection::make($filesystem->files($path))
             ->filter(fn ($file) => $file->getExtension() === 'json')
             ->map(fn ($file) => $file->getFilenameWithoutExtension())
