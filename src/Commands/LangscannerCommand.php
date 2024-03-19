@@ -25,9 +25,9 @@ class LangscannerCommand extends Command
 
         if ($modulePath) {
             $config['paths'] = [$modulePath];
-            $outputPath = $modulePath . "/resources/lang/{$language}/";
+            $outputPath = $modulePath . DIRECTORY_SEPARATOR ."resources".DIRECTORY_SEPARATOR ."lang".DIRECTORY_SEPARATOR ."{$language}";
         } else {
-            $outputPath = config('langscanner.lang_dir_path') . "/{$language}/";
+            $outputPath = config('langscanner.lang_dir_path') . DIRECTORY_SEPARATOR . "{$language}";
         }
 
         // Apply exclusions if any are provided
@@ -35,7 +35,7 @@ class LangscannerCommand extends Command
             $basePath = base_path();
             $transformedExclusions = array_map(function ($path) use ($basePath) {
                 // Ensure path is correctly formatted with base path
-                return $basePath . '/' . trim($path, '/');
+                return $basePath .DIRECTORY_SEPARATOR . trim($path, DIRECTORY_SEPARATOR);
             }, $exclusions);
 
             $config['excluded_paths'] = array_merge($config['excluded_paths'], $transformedExclusions);

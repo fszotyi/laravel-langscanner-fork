@@ -17,7 +17,7 @@ class FileTranslations implements Contracts\FileTranslations
 
         $this->language = $opts['language'];
         $this->disk = $opts['disk'] ?? resolve(Filesystem::class);
-        $this->rootPath = $opts['rootPath'] ?? config('langscanner.lang_dir_path') . '/';
+        $this->rootPath = $opts['rootPath'] ?? config('langscanner.lang_dir_path') .DIRECTORY_SEPARATOR ."{$this->language}";
     }
 
     public function language(): string
@@ -30,7 +30,7 @@ class FileTranslations implements Contracts\FileTranslations
         $translations = array_merge($this->all(), $translations);
         $translations = json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $this->disk->put($this->rootPath . $filename, $translations);
+        $this->disk->put($this->path(), $translations);
     }
 
     public function all(): array
@@ -55,6 +55,6 @@ class FileTranslations implements Contracts\FileTranslations
 
     private function path(): string
     {
-        return $this->rootPath . "{$this->language()}.json";
+        return "{$this->rootPath}".DIRECTORY_SEPARATOR ."text.json";
     }
 }
