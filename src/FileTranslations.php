@@ -36,7 +36,13 @@ class FileTranslations implements Contracts\FileTranslations
     public function all(): array
     {
         if (file_exists($this->path())) {
-            return json_decode($this->disk->get($this->path()), true);
+            $result = json_decode($this->disk->get($this->path()), true);
+
+            if (!is_array($result)) {
+                return [];
+            }
+
+            return $result;
         }
 
         return [];
