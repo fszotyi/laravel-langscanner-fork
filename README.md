@@ -18,7 +18,7 @@ In `composer.json` add:
 
 
 ```bash
- composer require druc/laravel-langscanner:dev-master
+ composer require druc/laravel-langscanner:dev-master --dev
 ```
 
 ## Usage
