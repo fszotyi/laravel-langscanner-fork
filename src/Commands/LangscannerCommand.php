@@ -27,7 +27,7 @@ class LangscannerCommand extends Command
             $config['paths'] = [$modulePath];
             $outputPath = $modulePath . "/resources/lang/{$language}/";
         } else {
-            $outputPath = config('langscanner.lang_dir_path') . '/';
+            $outputPath = config('langscanner.lang_dir_path') . "/{$language}/";
         }
 
         // Apply exclusions if any are provided
